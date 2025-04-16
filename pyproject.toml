@@ -1,16 +1,58 @@
 [project]
-name = "torch-multiplatform-demo"
+name = "project"
 version = "0.1.0"
 requires-python = ">=3.12.0"
-dependencies = ["colorama>=0.4.6", "torch>=2.6.0", "torchvision>=0.21.0"]
+dependencies = ["colorama"]
 
-# If we are on Linux, we assume that we are using CUDA 12.4
-# If we are on MacOS, it will use the default repo, which will have mps support
+[project.optional-dependencies]
+cpu = ["torch>=2.6.0", "torchvision>=0.21.0"]
+cu124 = ["torch>=2.6.0", "torchvision>=0.21.0"]
+rocm = ["torch>=2.6.0", "torchvision>=0.21.0"]
+mps = ["torch>=2.6.0", "torchvision>=0.21.0"]
+
+
+[tool.uv]
+default-groups = []
+conflicts = [
+    [
+        { extra = "cpu" },
+        { extra = "cu124" },
+        { extra = "rocm" },
+        { extra = "mps" },
+    ],
+]
+
 [tool.uv.sources]
-torch = [{ index = "pytorch-cu124", marker = "sys_platform == 'linux'" }]
-torchvision = [{ index = "pytorch-cu124", marker = "sys_platform == 'linux'" }]
+torch = [
+    { index = "pytorch-cpu", extra = "cpu" },
+    { index = "pytorch-cu124", extra = "cu124" },
+    { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'linux'"},
+    { index = "pytorch-mps", extra = "mps" },
+]
+torchvision = [
+    { index = "pytorch-cpu", extra = "cpu" },
+    { index = "pytorch-cu124", extra = "cu124" },
+    { index = "pytorch-rocm", extra = "rocm", marker = "sys_platform == 'linux'"},
+    { index = "pytorch-mps", extra = "mps" },
+]
+
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
 
 [[tool.uv.index]]
 name = "pytorch-cu124"
 url = "https://download.pytorch.org/whl/cu124"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-rocm"
+url = "https://download.pytorch.org/whl/rocm6.2"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-mps"
+url = "https://download.pytorch.org/whl/metal"
 explicit = true
