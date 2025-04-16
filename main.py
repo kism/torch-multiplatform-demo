@@ -16,14 +16,14 @@ def get_torch_device_list() -> list[torch.device]:
         # Rocm uses the CUDA API
         # https://rocm.docs.amd.com/projects/install-on-linux/en/latest/install/3rd-party/pytorch-install.html
         print("Found Nvidia (Or maybe even AMD rocm) CUDA acceleration")
-        print(f"Cuda version     : {torch.version.cuda}")
-        print(f"Cuda acceleration: {torch.cuda.is_available()}")
-        print(f"Cuda device count: {torch.cuda.device_count()}")
-        print(f"Current device   : {torch.cuda.current_device()}")
+        print(f"  Cuda version     : {torch.version.cuda}")
+        print(f"  Cuda acceleration: {torch.cuda.is_available()}")
+        print(f"  Cuda device count: {torch.cuda.device_count()}")
+        print(f"  Current device   : {torch.cuda.current_device()}")
 
         for i in range(torch.cuda.device_count()):
-            print(f"  CUDA device: {i}")
-            print(f"    {torch.cuda.get_device_name(i)}")
+            print(f"    CUDA device: {i}")
+            print(f"      {torch.cuda.get_device_name(i)}")
             torch_devices.append(torch.device(f"cuda:{i}"))
 
     if torch.backends.mps.is_available():
